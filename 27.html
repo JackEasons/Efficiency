@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <style type="text/css">
+    *,
+    *::after,
+    *::before {
+        box-sizing: border-box;
+        transform-style: preserve-3d;
+    }
+    body {
+        perspective: 2000px;
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+        background: radial-gradient(circle at 50% 50%, #fff 0%, #7EC0EE 200%);
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        font-family: 'Roboto';
+        font-weight: 300
+    }
+    #container {
+        width: 320px;
+        height: 320px;
+        transform: rotateX(50deg);
+        position: relative;
+        border: 10px solid #fff;
+        border-radius: 50%;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 2px 5px rgba(0,0,0,0.5);
+        z-index: 1;
+    }
+    #container::after {
+        content:'';
+        position: absolute;
+        top:20px;
+        left:20px;
+        bottom:20px;
+        right:20px;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        background: linear-gradient(45deg,#7B1FA2,#EF5350,#FF5722);
+        background-size: 200%;
+        background-position: 50%;
+        z-index: -1;
+        transform: translateZ(-20px);
+        animation: bg1 5s infinite alternate;
+    }
+    #container::before {
+        content:'';
+        position: absolute;
+        top:20px;
+        left:20px;
+        bottom:20px;
+        right:20px;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        background: linear-gradient(135deg,#2E7D32,#1976D2,#3F51B5);
+        background-size: 200%;
+        background-position: 50%;
+        z-index: 0;
+        transform: translateZ(-20px);
+        animation: bg2 10s infinite alternate;
+    }
+    @keyframes bg1 {
+        0%,10%{background-position: 0%}
+        90%,100%{background-position: 100%}
+    }
+    @keyframes bg2 {
+        0%{background-position: 0%; opacity:1}
+        50%{opacity:0;}
+        100%{background-position: 100%; opacity:1}
+    }
+    #container > div {
+        position: absolute;
+        width: 50%;
+        height: 50%;
+        background: rgba(0,0,0,0.25);
+        box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+    #container > div::after{
+        content:'';
+        position:absolute;
+        width: 40px;
+        height:40px;
+        background: #ccc;border-radius: 50%;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    #container > div:nth-child(1){
+        transform-origin: 100% 100%;
+        transform: translateX(0%);
+        border-top: 20px solid #01579B;
+        border-left: 20px solid #01579B;
+        border-top-left-radius: 100%;
+        background-image:
+                radial-gradient(
+                        circle at 100% 100%,
+                        #81D4FA 20px,
+                        #4FC3F7 20px, #4FC3F7 40px,
+                        #29B6F6 40px, #29B6F6 60px,
+                        #03A9F4 60px, #03A9F4 80px,
+                        #039BE5 80px, #039BE5 100px,
+                        #0288D1 100px, #0288D1 120px,
+                        #0277BD 120px, #0277BD 140px
+                );
+        animation: p1 6s infinite linear;
+    }
+    #container > div:nth-child(1):after {
+        bottom: -20px;
+        right: -20px;
+    }
+    #container > div:nth-child(2){
+        transform-origin: 0% 100%;
+        transform: translateX(100%);
+        border-top: 20px solid #006064;
+        border-right: 20px solid #006064;
+        border-top-right-radius: 100%;
+        background-image:
+                radial-gradient(
+                        circle at 0% 100%,
+                        #80DEEA 20px,
+                        #4DD0E1 20px, #4DD0E1 40px,
+                        #26C6DA 40px, #26C6DA 60px,
+                        #00BCD4 60px, #00BCD4 80px,
+                        #00ACC1 80px, #00ACC1 100px,
+                        #0097A7 100px, #0097A7 120px,
+                        #00838F 120px, #00838F 140px
+                );
+        animation: p2 5.8s infinite linear;
+    }
+    #container > div:nth-child(2):after {
+        bottom: -20px;
+        left: -20px;
+    }
+    #container > div:nth-child(3){
+        transform-origin: 0% 0%;
+        transform: translateX(100%) translateY(100%);
+        border-bottom: 20px solid #004D40;
+        border-right: 20px solid #004D40;
+        border-bottom-right-radius: 100%;
+        background-image:
+                radial-gradient(
+                        circle at 0% 0%,
+                        #80CBC4 20px,
+                        #4DB6AC 20px, #4DB6AC 40px,
+                        #26A69A 40px, #26A69A 60px,
+                        #009688 60px, #009688 80px,
+                        #00897B 80px, #00897B 100px,
+                        #00796B 100px, #00796B 120px,
+                        #00695C 120px, #00695C 140px
+                );
+        animation: p3 5.6s infinite linear;
+    }
+    #container > div:nth-child(3):after {
+        top: -20px;
+        left: -20px;
+    }
+    #container > div:nth-child(4){
+        transform-origin: 100% 0%;
+        transform: translateY(100%);
+        border-bottom: 20px solid #1B5E20;
+        border-left: 20px solid #1B5E20;
+        border-bottom-left-radius: 100%;
+        background-image:
+                radial-gradient(
+                        circle at 100% 0%,
+                        #A5D6A7 20px,
+                        #81C784 20px, #81C784 40px,
+                        #66BB6A 40px, #66BB6A 60px,
+                        #4CAF50 60px, #4CAF50 80px,
+                        #43A047 80px, #43A047 100px,
+                        #388E3C 100px, #388E3C 120px,
+                        #2E7D32 120px, #2E7D32 140px
+                );
+        animation: p4 5.4s infinite linear;
+    }
+    #container > div:nth-child(4):after {
+        top: -20px;
+        right: -20px;
+    }
+
+    @keyframes p1 {
+        0% {
+            transform: rotateZ(-360deg)
+        }
+        100% {
+            transform: rotateZ(0deg)
+        }
+    }
+    @keyframes p2 {
+        0% {
+            transform: translateX(100%) rotateZ(-450deg)
+        }
+        100% {
+            transform:  translateX(100%) rotateZ(0deg)
+        }
+    }
+    @keyframes p3 {
+        0% {
+            transform: translateX(100%) translateY(100%) rotateZ(-540deg)
+        }
+        100% {
+            transform: translateX(100%) translateY(100%) rotateZ(0deg)
+        }
+    }
+    @keyframes p4 {
+        0% {
+            transform: translateY(100%) rotateZ(-630deg)
+        }
+        100% {
+            transform: translateY(100%) rotateZ(0deg)
+        }
+    }
+
+    @keyframes p1 {
+        0% {
+            transform: translateZ(5px) rotateZ(-360deg)
+        }
+        100% {
+            transform: translateZ(5px) rotateZ(0deg)
+        }
+    }
+    @keyframes p2 {
+        0% {
+            transform: translateX(100%) translateZ(10px) rotateZ(-450deg)
+        }
+        100% {
+            transform:  translateX(100%) translateZ(10px) rotateZ(-90deg)
+        }
+    }
+    @keyframes p3 {
+        0% {
+            transform: translateX(100%) translateY(100%) translateZ(15px) rotateZ(-540deg)
+        }
+        100% {
+            transform: translateX(100%) translateY(100%) translateZ(15px) rotateZ(-180deg)
+        }
+    }
+    @keyframes p4 {
+        0% {
+            transform: translateY(100%) translateZ(20px) rotateZ(-630deg)
+        }
+        100% {
+            transform: translateY(100%) translateZ(20px) rotateZ(-270deg)
+        }
+    }
+</style>
+<script type="text/javascript" src="js/jquery-2.1.1.min.js" ></script>
+    <div id="container">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</body>
+<script type="text/javascript">
+    //<![CDATA[
+    window.onload = function () {
+        $(document).ready(function(){
+            $('body').mousemove(function(e){
+                W = $('body').width() / 2;
+                H = $('body').height() / 2;
+                X = W - e.pageX;
+                Y = H - e.pageY;
+                a = Y / H * 45;
+                b = -X / W * 45;
+                $("#container").css({transform: 'rotateX('+a+'deg) rotateY('+b+'deg)'});
+            });
+        });
+    }//]]>
+</script>
+</html>

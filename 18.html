@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<title></title>
+	<style>
+		html, body {
+			height: 100%;
+		}
+		body {
+			background-color: #000000;
+			margin: 0;
+			font-family: Arial;
+			overflow: hidden;
+		}
+		a {
+			color: #ffffff;
+		}
+		#info {
+			position: absolute;
+			width: 100%;
+			color: #ffffff;
+			padding: 5px;
+			font-family: Monospace;
+			font-size: 13px;
+			font-weight: bold;
+			text-align: center;
+			z-index: 1;
+		}
+		#menu {
+			position: absolute;
+			bottom: 20px;
+			width: 100%;
+			text-align: center;
+		}
+		.element {
+			width: 140px;
+			height: 180px;
+			box-shadow: 0px 0px 20px rgba(0,255,255,0.5);
+			border: 1px solid rgba(127,255,255,0.25);
+			cursor: default;
+		}
+		.element:hover {
+			box-shadow: 0px 0px 20px rgba(0,255,255,0.75);
+			border: 1px solid rgba(127,255,255,0.75);
+		}
+		.element .number {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			font-size: 20px;
+			color: rgba(127,255,255,0.75);
+		}
+		.element .symbol {
+			position: absolute;
+			top: 40px;
+			width: 100%;
+			font-size: 70px;
+			text-align: center;
+			color: rgba(255,255,255,0.75);
+			font-weight: bold;
+			-webkit-filter: drop-shadow(0px 0px 20px rgba(0,255,255,0.95));
+			-moz-filter: drop-shadow(0px 0px 20px rgba(0,255,255,0.95));
+			-o-filter: drop-shadow(0px 0px 20px rgba(0,255,255,0.95));
+			-ms-filter: drop-shadow(0px 0px 20px rgba(0,255,255,0.95));
+			filter: drop-shadow(0px 0px 20px rgba(0,255,255,0.95));
+		}
+		.element .details {
+			position: absolute;
+			top: 125px;
+			width: 100%;
+			font-size: 18px;
+			text-align: center;
+			color: rgba(127,255,255,0.75);
+		}
+		button {
+			color: rgba(255,255,255,1);
+			background: transparent;
+			outline: 1px solid rgba(127,255,255,0.75);
+			border: 0px;
+			padding: 5px 10px;
+			cursor: pointer;
+		}
+		button:hover {
+			background-color: rgba(0,0,255,0.5);
+		}
+		button:active {
+			color: #000000;
+			background-color: rgba(0,255,255,0.75);
+		}
+	</style>
+</head>
+<body>
+<script src="js/three.min.56.js"></script>
+<script src="js/libs/tween.min.js"></script>
+<script src="js/controls/TrackballControls.js"></script>
+<script src="js/renderers/CSS3DRenderer.js"></script>
+<div id="container"></div>
+<div id="menu">
+	<button id="table">表格方式显示</button>
+	<button id="sphere">椭圆显示</button>
+	<button id="helix">螺旋方式显示</button>
+	<button id="grid">网格方式显示</button>
+	<script >
+
+        var DefineArr = ["H", "Hydrogen", "1.00794", "He", "Helium", "4.002602", "Li", "Lithium", "6.941", "Be", "Beryllium", "9.012182", "B", "Boron", "10.811", "C", "Carbon", "12.0107", "N", "Nitrogen", "14.0067", "O", "Oxygen", "15.9994", "F", "Fluorine", "18.9984032", "Ne", "Neon", "20.1797", "Na", "Sodium", "22.98976...", "Mg", "Magnesium", "24.305", "Al", "Aluminium", "26.9815386", "Si", "Silicon", "28.0855", "P", "Phosphorus", "30.973762", "S", "Sulfur", "32.065", "Cl", "Chlorine", "35.453", "Ar", "Argon", "39.948", "K", "Potassium", "Ca", "Calcium", "40.078", "Sc", "Scandium", "44.955912", "Ti", "Titanium", "47.867", "V", "Vanadium", "50.9415", "Cr", "Chromium", "51.9961", "Mn", "Manganese", "54.938045", "Fe", "Iron", "55.845", "Co", "Cobalt", "58.933195", "Ni", "Nickel", "58.6934", "Cu", "Copper", "63.546", "Zn", "Zinc", "65.38", "Ga", "Gallium", "69.723", "Ge", "Germanium", "72.63", "As", "Arsenic", "74.9216", "Se", "Selenium", "78.96", "Br", "Bromine", "79.904", "Kr", "Krypton", "83.798", "Rb", "Rubidium", "85.4678", "Sr", "Strontium", "87.62", "Y", "Yttrium", "88.90585", "Zr", "Zirconium", "91.224", "Nb", "Niobium", "92.90628", "Mo", "Molybdenum", "95.96", "Tc", "Technetium", "(98)", "Ru", "Ruthenium", "101.07", "Rh", "Rhodium", "102.9055", "Pd", "Palladium", "106.42", "Ag", "Silver", "107.8682", "Cd", "Cadmium", "112.411", "In", "Indium", "114.818", "Sn", "Tin", "118.71", "Sb", "Antimony", "121.76", "Te", "Tellurium", "127.6", "I", "Iodine", "126.90447", "Xe", "Xenon", "131.293", "Cs", "Caesium", "132.9054", "Ba", "Barium", "La", "Lanthanum", "138.90547", "Ce", "Cerium", "140.116", "Pr", "Praseodymium", "140.90765", "Nd", "Neodymium", "144.242", "Pm", "Promethium", "(145)", "Sm", "Samarium", "150.36", "Eu", "Europium", "151.964", "Gd", "Gadolinium", "157.25", "Tb", "Terbium", "158.92535", "Dy", "Dysprosium", "162.5", "Ho", "Holmium", "164.93032", "Er", "Erbium", "167.259", "Tm", "Thulium", "168.93421", "Yb", "Ytterbium", "173.054", "Lu", "Lutetium", "174.9668", "Hf", "Hafnium", "178.49", "Ta", "Tantalum", "180.94788", "W", "Tungsten", "183.84", "Re", "Rhenium", "186.207", "Os", "Osmium", "190.23", "Ir", "Iridium", "192.217", "Pt", "Platinum", "195.084", "Au", "Gold", "196.966569", "Hg", "Mercury", "200.59", "Tl", "Thallium", "204.3833", "Pb", "Lead", "207.2", "Bi", "Bismuth", "208.9804", "Po", "Polonium", "(209)", "At", "Astatine", "(210)", "Rn", "Radon", "(222)", "Fr", "Francium", "(223)", "Ra", "Radium", "(226)", "Ac", "Actinium", "(227)", "Th", "Thorium", "232.03806", "Pa", "Protactinium", "231.0588", "U", "Uranium", "238.02891", "Np", "Neptunium", "(237)", "Pu", "Plutonium", "(244)", "Am", "Americium", "(243)", "Cm", "Curium", "(247)", "Bk", "Berkelium", "Cf", "Californium", "(251)", "Es", "Einstenium", "(252)", "Fm", "Fermium", "(257)", "Md", "Mendelevium", "(258)", "No", "Nobelium", "(259)", "Lr", "Lawrencium", "(262)", "Rf", "Rutherfordium", "(267)", "Db", "Dubnium", "(268)", "Sg", "Seaborgium", "(271)", "Bh", "Bohrium", "(272)", "Hs", "Hassium", "(270)", "Mt", "Meitnerium", "(276)", "Ds", "Darmstadium", "(281)", "Rg", "Roentgenium", "(280)", "Cn", "Copernicium", "(285)", "Uut", "Unutrium", "(284)", "Fl", "Flerovium", "(289)", "Uup", "Ununpentium", "(288)", "Lv", "Livermorium", "(293)", "Uus", "Ununseptium", "(294)", "Uuo", "Ununoctium", "innerWidth", "innerHeight", "z", "position", "length", "div", "createElement", "className", "element", "backgroundColor", "style", "rgba(12,87,200,", "random", ")", "number", "textContent", "appendChild", "symbol", "details", "innerHTML", "<br>", "x", "y", "add", "push", "table", "acos", "PI", "sqrt", "cos", "sin", "multiplyScalar", "copy", "lookAt", "sphere", "helix", "floor", "grid", "setSize", "domElement", "absolute", "container", "getElementById", "rotateSpeed", "change", "addEventListener", "click", "resize", "removeAll", "start", "Exponential", "Easing", "easing", "to", "rotation", "onUpdate", "aspect", "updateProjectionMatrix", "update", "render"];
+        var table = [
+            [DefineArr[0], DefineArr[1], DefineArr[2], 1, 1],
+            [DefineArr[3], DefineArr[4], DefineArr[5], 18, 1],
+            [DefineArr[6], DefineArr[7], DefineArr[8], 1, 2],
+            [DefineArr[9], DefineArr[10], DefineArr[11], 2, 2],
+            [DefineArr[12], DefineArr[13], DefineArr[14], 13, 2],
+            [DefineArr[15], DefineArr[16], DefineArr[17], 14, 2],
+            [DefineArr[18], DefineArr[19], DefineArr[20], 15, 2],
+            [DefineArr[21], DefineArr[22], DefineArr[23], 16, 2],
+            [DefineArr[24], DefineArr[25], DefineArr[26], 17, 2],
+            [DefineArr[27], DefineArr[28], DefineArr[29], 18, 2],
+            [DefineArr[30], DefineArr[31], DefineArr[32], 1, 3],
+            [DefineArr[33], DefineArr[34], DefineArr[35], 2, 3],
+            [DefineArr[36], DefineArr[37], DefineArr[38], 13, 3],
+            [DefineArr[39], DefineArr[40], DefineArr[41], 14, 3],
+            [DefineArr[42], DefineArr[43], DefineArr[44], 15, 3],
+            [DefineArr[45], DefineArr[46], DefineArr[47], 16, 3],
+            [DefineArr[48], DefineArr[49], DefineArr[50], 17, 3],
+            [DefineArr[51], DefineArr[52], DefineArr[53], 18, 3],
+            [DefineArr[54], DefineArr[55], DefineArr[53], 1, 4],
+            [DefineArr[56], DefineArr[57], DefineArr[58], 2, 4],
+            [DefineArr[59], DefineArr[60], DefineArr[61], 3, 4],
+            [DefineArr[62], DefineArr[63], DefineArr[64], 4, 4],
+            [DefineArr[65], DefineArr[66], DefineArr[67], 5, 4],
+            [DefineArr[68], DefineArr[69], DefineArr[70], 6, 4],
+            [DefineArr[71], DefineArr[72], DefineArr[73], 7, 4],
+            [DefineArr[74], DefineArr[75], DefineArr[76], 8, 4],
+            [DefineArr[77], DefineArr[78], DefineArr[79], 9, 4],
+            [DefineArr[80], DefineArr[81], DefineArr[82], 10, 4],
+            [DefineArr[83], DefineArr[84], DefineArr[85], 11, 4],
+            [DefineArr[86], DefineArr[87], DefineArr[88], 12, 4],
+            [DefineArr[89], DefineArr[90], DefineArr[91], 13, 4],
+            [DefineArr[92], DefineArr[93], DefineArr[94], 14, 4],
+            [DefineArr[95], DefineArr[96], DefineArr[97], 15, 4],
+            [DefineArr[98], DefineArr[99], DefineArr[100], 16, 4],
+            [DefineArr[101], DefineArr[102], DefineArr[103], 17, 4],
+            [DefineArr[104], DefineArr[105], DefineArr[106], 18, 4],
+            [DefineArr[107], DefineArr[108], DefineArr[109], 1, 5],
+            [DefineArr[110], DefineArr[111], DefineArr[112], 2, 5],
+            [DefineArr[113], DefineArr[114], DefineArr[115], 3, 5],
+            [DefineArr[116], DefineArr[117], DefineArr[118], 4, 5],
+            [DefineArr[119], DefineArr[120], DefineArr[121], 5, 5],
+            [DefineArr[122], DefineArr[123], DefineArr[124], 6, 5],
+            [DefineArr[125], DefineArr[126], DefineArr[127], 7, 5],
+            [DefineArr[128], DefineArr[129], DefineArr[130], 8, 5],
+            [DefineArr[131], DefineArr[132], DefineArr[133], 9, 5],
+            [DefineArr[134], DefineArr[135], DefineArr[136], 10, 5],
+            [DefineArr[137], DefineArr[138], DefineArr[139], 11, 5],
+            [DefineArr[140], DefineArr[141], DefineArr[142], 12, 5],
+            [DefineArr[143], DefineArr[144], DefineArr[145], 13, 5],
+            [DefineArr[146], DefineArr[147], DefineArr[148], 14, 5],
+            [DefineArr[149], DefineArr[150], DefineArr[151], 15, 5],
+            [DefineArr[152], DefineArr[153], DefineArr[154], 16, 5],
+            [DefineArr[155], DefineArr[156], DefineArr[157], 17, 5],
+            [DefineArr[158], DefineArr[159], DefineArr[160], 18, 5],
+            [DefineArr[161], DefineArr[162], DefineArr[163], 1, 6],
+            [DefineArr[164], DefineArr[165], DefineArr[163], 2, 6],
+            [DefineArr[166], DefineArr[167], DefineArr[168], 4, 9],
+            [DefineArr[169], DefineArr[170], DefineArr[171], 5, 9],
+            [DefineArr[172], DefineArr[173], DefineArr[174], 6, 9],
+            [DefineArr[175], DefineArr[176], DefineArr[177], 7, 9],
+            [DefineArr[178], DefineArr[179], DefineArr[180], 8, 9],
+            [DefineArr[181], DefineArr[182], DefineArr[183], 9, 9],
+            [DefineArr[184], DefineArr[185], DefineArr[186], 10, 9],
+            [DefineArr[187], DefineArr[188], DefineArr[189], 11, 9],
+            [DefineArr[190], DefineArr[191], DefineArr[192], 12, 9],
+            [DefineArr[193], DefineArr[194], DefineArr[195], 13, 9],
+            [DefineArr[196], DefineArr[197], DefineArr[198], 14, 9],
+            [DefineArr[199], DefineArr[200], DefineArr[201], 15, 9],
+            [DefineArr[202], DefineArr[203], DefineArr[204], 16, 9],
+            [DefineArr[205], DefineArr[206], DefineArr[207], 17, 9],
+            [DefineArr[208], DefineArr[209], DefineArr[210], 18, 9],
+            [DefineArr[211], DefineArr[212], DefineArr[213], 4, 6],
+            [DefineArr[214], DefineArr[215], DefineArr[216], 5, 6],
+            [DefineArr[217], DefineArr[218], DefineArr[219], 6, 6],
+            [DefineArr[220], DefineArr[221], DefineArr[222], 7, 6],
+            [DefineArr[223], DefineArr[224], DefineArr[225], 8, 6],
+            [DefineArr[226], DefineArr[227], DefineArr[228], 9, 6],
+            [DefineArr[229], DefineArr[230], DefineArr[231], 10, 6],
+            [DefineArr[232], DefineArr[233], DefineArr[234], 11, 6],
+            [DefineArr[235], DefineArr[236], DefineArr[237], 12, 6],
+            [DefineArr[238], DefineArr[239], DefineArr[240], 13, 6],
+            [DefineArr[241], DefineArr[242], DefineArr[243], 14, 6],
+            [DefineArr[244], DefineArr[245], DefineArr[246], 15, 6],
+            [DefineArr[247], DefineArr[248], DefineArr[249], 16, 6],
+            [DefineArr[250], DefineArr[251], DefineArr[252], 17, 6],
+            [DefineArr[253], DefineArr[254], DefineArr[255], 18, 6],
+            [DefineArr[256], DefineArr[257], DefineArr[258], 1, 7],
+            [DefineArr[259], DefineArr[260], DefineArr[261], 2, 7],
+            [DefineArr[262], DefineArr[263], DefineArr[264], 4, 10],
+            [DefineArr[265], DefineArr[266], DefineArr[267], 5, 10],
+            [DefineArr[268], DefineArr[269], DefineArr[270], 6, 10],
+            [DefineArr[271], DefineArr[272], DefineArr[273], 7, 10],
+            [DefineArr[274], DefineArr[275], DefineArr[276], 8, 10],
+            [DefineArr[277], DefineArr[278], DefineArr[279], 9, 10],
+            [DefineArr[280], DefineArr[281], DefineArr[282], 10, 10],
+            [DefineArr[283], DefineArr[284], DefineArr[285], 11, 10],
+            [DefineArr[286], DefineArr[287], DefineArr[285], 12, 10],
+            [DefineArr[288], DefineArr[289], DefineArr[290], 13, 10],
+            [DefineArr[291], DefineArr[292], DefineArr[293], 14, 10],
+            [DefineArr[294], DefineArr[295], DefineArr[296], 15, 10],
+            [DefineArr[297], DefineArr[298], DefineArr[299], 16, 10],
+            [DefineArr[300], DefineArr[301], DefineArr[302], 17, 10],
+            [DefineArr[303], DefineArr[304], DefineArr[305], 18, 10],
+            [DefineArr[306], DefineArr[307], DefineArr[308], 4, 7],
+            [DefineArr[309], DefineArr[310], DefineArr[311], 5, 7],
+            [DefineArr[312], DefineArr[313], DefineArr[314], 6, 7],
+            [DefineArr[315], DefineArr[316], DefineArr[317], 7, 7],
+            [DefineArr[318], DefineArr[319], DefineArr[320], 8, 7],
+            [DefineArr[321], DefineArr[322], DefineArr[323], 9, 7],
+            [DefineArr[324], DefineArr[325], DefineArr[326], 10, 7],
+            [DefineArr[327], DefineArr[328], DefineArr[329], 11, 7],
+            [DefineArr[330], DefineArr[331], DefineArr[332], 12, 7],
+            [DefineArr[333], DefineArr[334], DefineArr[335], 13, 7],
+            [DefineArr[336], DefineArr[337], DefineArr[338], 14, 7],
+            [DefineArr[339], DefineArr[340], DefineArr[341], 15, 7],
+            [DefineArr[342], DefineArr[343], DefineArr[344], 16, 7],
+            [DefineArr[345], DefineArr[346], DefineArr[347], 17, 7],
+            [DefineArr[348], DefineArr[349], DefineArr[347], 18, 7]
+        ];
+        var camera, scene, renderer;
+        var controls;
+        var objects = [];
+        var targets = {
+            table: [],
+            sphere: [],
+            helix: [],
+            grid: []
+        };
+        init();
+        animate();
+
+        function init() {
+            camera = new THREE.PerspectiveCamera(75, window[DefineArr[350]] / window[DefineArr[351]], 1, 5000);
+            camera[DefineArr[353]][DefineArr[352]] = 1600;
+            scene = new THREE.Scene();
+            for (var i = 0; i < table[DefineArr[354]]; i++) {
+                var ref = table[i];
+                var dom = document[DefineArr[356]](DefineArr[355]);
+                dom[DefineArr[357]] = DefineArr[358];
+                dom[DefineArr[360]][DefineArr[359]] = DefineArr[361] + (Math[DefineArr[362]]() * 0.5 + 0.25) + DefineArr[363];
+                var domt = document[DefineArr[356]](DefineArr[355]);
+                domt[DefineArr[357]] = DefineArr[364];
+                domt[DefineArr[365]] = i + 1;
+                dom[DefineArr[366]](domt);
+                var domp = document[DefineArr[356]](DefineArr[355]);
+                domp[DefineArr[357]] = DefineArr[367];
+                domp[DefineArr[365]] = ref[0];
+                dom[DefineArr[366]](domp);
+                var domm = document[DefineArr[356]](DefineArr[355]);
+                domm[DefineArr[357]] = DefineArr[368];
+                domm[DefineArr[369]] = ref[1] + DefineArr[370] + ref[2];
+                dom[DefineArr[366]](domm);
+                var domx = new THREE.CSS3DObject(dom);
+                domx[DefineArr[353]][DefineArr[371]] = Math[DefineArr[362]]() * 4000 - 2000;
+                domx[DefineArr[353]][DefineArr[372]] = Math[DefineArr[362]]() * 4000 - 2000;
+                domx[DefineArr[353]][DefineArr[352]] = Math[DefineArr[362]]() * 4000 - 2000;
+                scene[DefineArr[373]](domx);
+                objects[DefineArr[374]](domx);
+            };
+            for (var i = 0; i < objects[DefineArr[354]]; i++) {
+                var ref = table[i];
+                var domx = new THREE.Object3D();
+                domx[DefineArr[353]][DefineArr[371]] = (ref[3] * 160) - 1540;
+                domx[DefineArr[353]][DefineArr[372]] = -(ref[4] * 200) + 1100;
+                targets[DefineArr[375]][DefineArr[374]](domx);
+            };
+            var doms = new THREE.Vector3();
+            for (var i = 0, domo = objects[DefineArr[354]]; i < domo; i++) {
+                var domw = Math[DefineArr[376]](-1 + (2 * i) / domo);
+                var doml = Math[DefineArr[378]](domo * Math[DefineArr[377]]) * domw;
+                var domx = new THREE.Object3D();
+                domx[DefineArr[353]][DefineArr[371]] = 1000 * Math[DefineArr[379]](doml) * Math[DefineArr[380]](domw);
+                domx[DefineArr[353]][DefineArr[372]] = 1000 * Math[DefineArr[380]](doml) * Math[DefineArr[380]](domw);
+                domx[DefineArr[353]][DefineArr[352]] = 1000 * Math[DefineArr[379]](domw);
+                doms[DefineArr[382]](domx[DefineArr[353]])[DefineArr[381]](2);
+                domx[DefineArr[383]](doms);
+                targets[DefineArr[384]][DefineArr[374]](domx);
+            };
+            var doms = new THREE.Vector3();
+            for (var i = 0, domo = objects[DefineArr[354]]; i < domo; i++) {
+                var domw = i * 0.175 + Math[DefineArr[377]];
+                var domx = new THREE.Object3D();
+                domx[DefineArr[353]][DefineArr[371]] = 1100 * Math[DefineArr[380]](domw);
+                domx[DefineArr[353]][DefineArr[372]] = -(i * 8) + 450;
+                domx[DefineArr[353]][DefineArr[352]] = 1100 * Math[DefineArr[379]](domw);
+                doms[DefineArr[382]](domx[DefineArr[353]]);
+                doms[DefineArr[371]] *= 2;
+                doms[DefineArr[352]] *= 2;
+                domx[DefineArr[383]](doms);
+                targets[DefineArr[385]][DefineArr[374]](domx);
+            };
+            for (var i = 0; i < objects[DefineArr[354]]; i++) {
+                var domx = new THREE.Object3D();
+                domx[DefineArr[353]][DefineArr[371]] = ((i % 5) * 400) - 800;
+                domx[DefineArr[353]][DefineArr[372]] = (-(Math[DefineArr[386]](i / 5) % 5) * 400) + 800;
+                domx[DefineArr[353]][DefineArr[352]] = (Math[DefineArr[386]](i / 25)) * 1000 - 2000;
+                targets[DefineArr[387]][DefineArr[374]](domx);
+            };
+            renderer = new THREE.CSS3DRenderer();
+            renderer[DefineArr[388]](window[DefineArr[350]], window[DefineArr[351]]);
+            renderer[DefineArr[389]][DefineArr[360]][DefineArr[353]] = DefineArr[390];
+            document[DefineArr[392]](DefineArr[391])[DefineArr[366]](renderer[DefineArr[389]]);
+            controls = new THREE.TrackballControls(camera, renderer[DefineArr[389]]);
+            controls[DefineArr[393]] = 0.5;
+            controls[DefineArr[395]](DefineArr[394], render);
+            var domz = document[DefineArr[392]](DefineArr[375]);
+            domz[DefineArr[395]](DefineArr[396], function(domn) {
+                transform(targets[DefineArr[375]], 2000);
+            }, false);
+            var domz = document[DefineArr[392]](DefineArr[384]);
+            domz[DefineArr[395]](DefineArr[396], function(domn) {
+                transform(targets[DefineArr[384]], 2000);
+            }, false);
+            var domz = document[DefineArr[392]](DefineArr[385]);
+            domz[DefineArr[395]](DefineArr[396], function(domn) {
+                transform(targets[DefineArr[385]], 2000);
+            }, false);
+            var domz = document[DefineArr[392]](DefineArr[387]);
+            domz[DefineArr[395]](DefineArr[396], function(domn) {
+                transform(targets[DefineArr[387]], 2000);
+            }, false);
+            transform(targets[DefineArr[375]], 5000);
+            window[DefineArr[395]](DefineArr[397], onWindowResize, false);
+        };
+
+        function transform(targets, domu) {
+            TWEEN[DefineArr[398]]();
+            for (var i = 0; i < objects[DefineArr[354]]; i++) {
+                var domx = objects[i];
+                var domy = targets[i];
+                new TWEEN.Tween(domx[DefineArr[353]])[DefineArr[403]]({
+                    x: domy[DefineArr[353]][DefineArr[371]],
+                    y: domy[DefineArr[353]][DefineArr[372]],
+                    z: domy[DefineArr[353]][DefineArr[352]]
+                }, Math[DefineArr[362]]() * domu + domu)[DefineArr[402]](TWEEN[DefineArr[401]][DefineArr[400]].InOut)[DefineArr[399]]();
+                new TWEEN.Tween(domx[DefineArr[404]])[DefineArr[403]]({
+                    x: domy[DefineArr[404]][DefineArr[371]],
+                    y: domy[DefineArr[404]][DefineArr[372]],
+                    z: domy[DefineArr[404]][DefineArr[352]]
+                }, Math[DefineArr[362]]() * domu + domu)[DefineArr[402]](TWEEN[DefineArr[401]][DefineArr[400]].InOut)[DefineArr[399]]();
+            };
+            new TWEEN.Tween(this)[DefineArr[403]]({}, domu * 2)[DefineArr[405]](render)[DefineArr[399]]();
+        };
+
+        function onWindowResize() {
+            camera[DefineArr[406]] = window[DefineArr[350]] / window[DefineArr[351]];
+            camera[DefineArr[407]]();
+            renderer[DefineArr[388]](window[DefineArr[350]], window[DefineArr[351]]);
+        };
+
+        function animate() {
+            requestAnimationFrame(animate);
+            TWEEN[DefineArr[408]]();
+            controls[DefineArr[408]]();
+        };
+
+        function render() {
+            renderer[DefineArr[409]](scene, camera);
+        };
+
+	</script>
+</body>
+</html>

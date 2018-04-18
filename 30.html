@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<style>
+    body {
+        margin: 0;
+        border: 0;
+        background: #141D2D;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+</style>
+<body>
+<canvas id='canvas'></canvas>
+</body>
+<script type="text/javascript">
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext('2d');
+    let context = ctx;
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    let centerX = width * 0.5;
+    let centerY = height * 0.5;
+    let mainColor = '#0F76E6';
+    let secondaryColor = '#CF00EA';
+
+    canvas.width = width;
+    canvas.height = height;
+
+    const LINE_WIDTH = 1;
+    let objSize = 50;
+    let initialAngle = 45;
+    let cols = Math.floor(width / objSize) + 2;
+    let rows = Math.floor(height / objSize) + 2;
+    let objsNum = cols * rows;
+    let objs = [];
+    let clrs = [
+        '#14EBDB',
+        '#3171B5',
+        '#4A1C98',
+        '#98247A',
+        '#FB584B',
+        '#A34A43',
+        '#FBD52C'
+    ];
+
+    const rclr = () => {
+        return clrs[random(0, clrs.length - 1)];
+    }
+
+    function init() {
+        if (!objs.length) {
+            for (var x = 0; x < cols; x++) {
+                for (var y = 0; y < rows; y++) {
+                    let h = newHex(x * objSize, y * objSize, `${x}${y}`);
+                    objs.push(h);
+                    drawHex(h);
+                }
+            }
+        }
+    }
+
+    function animate() {
+        window.requestAnimationFrame(animate);
+        render();
+
+    }
+
+    let h;
+    function render() {
+        for (var i = 0, l = objs.length; i < l; i++) {
+            h = objs[i];
+            h.r += 0.01;
+            h.s += 0.005;
+            drawHex(h);
+        }
+    }
+
+    function drawHex(o) {
+        ctx.beginPath();
+        ctx.moveTo(o.x + o.s * Math.cos(o.r), o.y + o.s * Math.sin(o.r));
+
+        for (let i = 1; i <= o.nS; i += 1) {
+            let angle = (i * 2 * Math.PI / o.nS) + o.r;
+
+            ctx.lineTo(o.x + o.s * Math.cos(angle), o.y + o.s * Math.sin(angle));
+        }
+
+        ctx.strokeStyle = o.c;
+        ctx.fillStyle = o.c;
+        ctx.lineWidth = o.lW;
+        ctx.stroke();
+    }
+
+    function newHex(x, y) {
+        return {
+            nS: 4,
+            s: objSize/2 + 10,
+            x: x,
+            y: y,
+            c: rclr(),
+            r: initialAngle,
+            lW: LINE_WIDTH,
+            d: 1
+        }
+    }
+
+    animate();
+    init();
+
+    function random(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+</script>
+</html>

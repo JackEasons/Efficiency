@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+
+
+    canvas {
+        position: relative;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+    const HEIGHT = window.innerHeight;
+    const WIDTH = window.innerWidth;
+    const NB_EL = 100;
+    const STEPS_X = WIDTH / NB_EL;
+    const STEPS_Y = HEIGHT / NB_EL;
+    const FPS = 1000/60;
+
+
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    canvas.height = HEIGHT;
+    canvas.width = WIDTH;
+
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+
+    var _y = 0;
+    var cur_el = 0;
+    var c = ["#9900CC", "#0099CC", "#00CC99"];
+
+    var t = setInterval( function() {
+        _x = cur_el * STEPS_X;
+        _y = cur_el * STEPS_Y;
+
+
+        color = c[cur_el%c.length];
+
+        ctx.beginPath();
+        ctx.moveTo(_x, HEIGHT);
+        ctx.lineTo(0, _y) ;//x, y, w, h
+        ctx.strokeStyle = color;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(_x, 0);
+        ctx.lineTo(WIDTH, _y) ;//x, y, w, h
+        ctx.strokeStyle = color;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(_x, HEIGHT);
+        ctx.lineTo(WIDTH, HEIGHT-_y) ;//x, y, w, h
+        ctx.strokeStyle = color;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(_x, 0);
+        ctx.lineTo(0, HEIGHT-_y) ;//x, y, w, h
+        ctx.strokeStyle = color;
+        ctx.stroke();
+
+
+
+
+
+        cur_el++;
+        if(cur_el > NB_EL) {
+            cur_el = 0;
+            //clearInterval(t);
+        }
+
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    }, FPS);
+</script>
+</body>
+</html>

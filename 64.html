@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #171723;
+            transform-style: preserve-3d;
+            perspective: 600px; }
+
+        .canvas {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 500px;
+            max-height: 500px;
+            transform-style: preserve-3d;
+            transform: rotateX(60deg); }
+
+        .circle {
+            position: absolute;
+            box-sizing: border-box;
+            border-width: 4px;
+            border-style: solid;
+            border-radius: 50%;
+            will-change: transform; }
+
+        .circle--aqua {
+            border-color: aqua; }
+
+        .circle--gold {
+            border-color: gold; }
+
+        .circle--tomato {
+            border-color: tomato; }
+
+        @keyframes circle-tilt {
+            0%, 100% {
+                transform: rotateY(0deg) rotateX(0deg); }
+            15%, 45% {
+                transform: rotateY(40deg) rotateX(0deg); }
+            30%, 60% {
+                transform: rotateY(-40deg) rotateX(0deg); }
+            70% {
+                transform: rotateY(0deg) rotateX(-60deg); }
+            80% {
+                transform: rotateY(0deg) rotateX(10deg); }
+            90% {
+                transform: rotateY(0deg) rotateX(-60deg); } }
+        .circle:nth-child(1) {
+            top: calc(50% - 192px);
+            left: calc(50% - 192px);
+            width: 384px;
+            height: 384px;
+            animation: circle-tilt 8s 0.95238s infinite; }
+
+        .circle:nth-child(2) {
+            top: calc(50% - 184px);
+            left: calc(50% - 184px);
+            width: 368px;
+            height: 368px;
+            animation: circle-tilt 8s 0.90476s infinite; }
+
+        .circle:nth-child(3) {
+            top: calc(50% - 176px);
+            left: calc(50% - 176px);
+            width: 352px;
+            height: 352px;
+            animation: circle-tilt 8s 0.85714s infinite; }
+
+        .circle:nth-child(4) {
+            top: calc(50% - 168px);
+            left: calc(50% - 168px);
+            width: 336px;
+            height: 336px;
+            animation: circle-tilt 8s 0.80952s infinite; }
+
+        .circle:nth-child(5) {
+            top: calc(50% - 160px);
+            left: calc(50% - 160px);
+            width: 320px;
+            height: 320px;
+            animation: circle-tilt 8s 0.7619s infinite; }
+
+        .circle:nth-child(6) {
+            top: calc(50% - 152px);
+            left: calc(50% - 152px);
+            width: 304px;
+            height: 304px;
+            animation: circle-tilt 8s 0.71429s infinite; }
+
+        .circle:nth-child(7) {
+            top: calc(50% - 144px);
+            left: calc(50% - 144px);
+            width: 288px;
+            height: 288px;
+            animation: circle-tilt 8s 0.66667s infinite; }
+
+        .circle:nth-child(8) {
+            top: calc(50% - 136px);
+            left: calc(50% - 136px);
+            width: 272px;
+            height: 272px;
+            animation: circle-tilt 8s 0.61905s infinite; }
+
+        .circle:nth-child(9) {
+            top: calc(50% - 128px);
+            left: calc(50% - 128px);
+            width: 256px;
+            height: 256px;
+            animation: circle-tilt 8s 0.57143s infinite; }
+
+        .circle:nth-child(10) {
+            top: calc(50% - 120px);
+            left: calc(50% - 120px);
+            width: 240px;
+            height: 240px;
+            animation: circle-tilt 8s 0.52381s infinite; }
+
+        .circle:nth-child(11) {
+            top: calc(50% - 112px);
+            left: calc(50% - 112px);
+            width: 224px;
+            height: 224px;
+            animation: circle-tilt 8s 0.47619s infinite; }
+
+        .circle:nth-child(12) {
+            top: calc(50% - 104px);
+            left: calc(50% - 104px);
+            width: 208px;
+            height: 208px;
+            animation: circle-tilt 8s 0.42857s infinite; }
+
+        .circle:nth-child(13) {
+            top: calc(50% - 96px);
+            left: calc(50% - 96px);
+            width: 192px;
+            height: 192px;
+            animation: circle-tilt 8s 0.38095s infinite; }
+
+        .circle:nth-child(14) {
+            top: calc(50% - 88px);
+            left: calc(50% - 88px);
+            width: 176px;
+            height: 176px;
+            animation: circle-tilt 8s 0.33333s infinite; }
+
+        .circle:nth-child(15) {
+            top: calc(50% - 80px);
+            left: calc(50% - 80px);
+            width: 160px;
+            height: 160px;
+            animation: circle-tilt 8s 0.28571s infinite; }
+
+        .circle:nth-child(16) {
+            top: calc(50% - 72px);
+            left: calc(50% - 72px);
+            width: 144px;
+            height: 144px;
+            animation: circle-tilt 8s 0.2381s infinite; }
+
+        .circle:nth-child(17) {
+            top: calc(50% - 64px);
+            left: calc(50% - 64px);
+            width: 128px;
+            height: 128px;
+            animation: circle-tilt 8s 0.19048s infinite; }
+
+        .circle:nth-child(18) {
+            top: calc(50% - 56px);
+            left: calc(50% - 56px);
+            width: 112px;
+            height: 112px;
+            animation: circle-tilt 8s 0.14286s infinite; }
+
+        .circle:nth-child(19) {
+            top: calc(50% - 48px);
+            left: calc(50% - 48px);
+            width: 96px;
+            height: 96px;
+            animation: circle-tilt 8s 0.09524s infinite; }
+
+        .circle:nth-child(20) {
+            top: calc(50% - 40px);
+            left: calc(50% - 40px);
+            width: 80px;
+            height: 80px;
+            animation: circle-tilt 8s 0.04762s infinite; }
+
+        .circle:nth-child(21) {
+            top: calc(50% - 32px);
+            left: calc(50% - 32px);
+            width: 64px;
+            height: 64px;
+            animation: circle-tilt 8s 0s infinite; }
+    </style>
+
+</head>
+<body>
+<div class="canvas">
+    <div class="circle circle--aqua"></div>
+    <div class="circle circle--gold"></div>
+    <div class="circle circle--tomato"></div>
+    <div class="circle circle--aqua"></div>
+    <div class="circle circle--gold"></div>
+    <div class="circle circle--tomato"></div>
+    <div class="circle circle--aqua"></div>
+    <div class="circle circle--gold"></div>
+    <div class="circle circle--tomato"></div>
+    <div class="circle circle--aqua"></div>
+    <div class="circle circle--gold"></div>
+    <div class="circle circle--tomato"></div>
+    <div class="circle circle--aqua"></div>
+    <div class="circle circle--gold"></div>
+    <div class="circle circle--tomato"></div>
+    <div class="circle circle--aqua"></div>
+    <div class="circle circle--gold"></div>
+    <div class="circle circle--tomato"></div>
+    <div class="circle circle--aqua"></div>
+    <div class="circle circle--gold"></div>
+    <div class="circle circle--tomato"></div>
+</div>
+<script type="application/javascript">//<![CDATA[
+
+//]]>
+</script>
+</body>
+</html>
+

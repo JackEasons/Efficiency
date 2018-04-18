@@ -1,0 +1,130 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+
+
+		*{margin:0px; padding:0px;}
+		body{background:url("images/bg.jpg");position:absolute; width:100%;height:100%;background-size:cover; }
+		#Main{width:1000px;height:600px;margin:80px auto 0px; position:relative;}
+		#Main .title{height:50px; background:#3397e4;color:#fff; font-size:26px; text-align:center;
+			line-height:50px;font-weight:bold;}
+		#Main #Map{height:550px;}
+
+		#Main .Search{width:615px;height:40px;background:#fff; position:absolute; top:100px;					left:180px; box-shadow:0px 0px 20px #000;}
+		#Main .Search input.txt{width:515px;height:40px; border:0px;float:left; text-indent:10px;}
+		#Main .Search input.but{width:100px;height:40px; background:#690; border:0px;
+			float:left; color:#fff;font-size:14px; font-family:"微软雅黑";}
+
+		#Main .Menu{width:110px;height:120px; background:#fff; box-shadow:0px 0px 10px #000;}
+		#Main .Menu ul li{list-style-type:none; height:30px; font-size:12px; line-height:30px;
+			text-align:Center; border-bottom:1px dotted #ccc;}
+		#Main .Menu ul li:hover{background:#3397e4;color:#fff;}
+	</style>
+</head>
+<body>
+
+<div id="Main">
+
+	<!--地图开始-->
+	<div id="Map"></div>
+	<!--地图结束-->
+
+	<!--搜索开始-->
+	<div class="Search">
+		<input id="cityName" placeholder="请输入城市的名称" type="text" class="txt">
+		<input id="query" value="搜  索" type="button" class="but">
+	</div>
+	<!--搜索结束-->
+
+	<!--菜单开始
+    <div class="Menu">
+        <ul>
+            <li class="hover">缩小</li>
+            <li>放大</li>
+            <li>测量距离</li>
+            <li>添加标记</li>
+        <ul>
+    </div>-->
+	<!--菜单结束-->
+</div>
+
+
+
+
+
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=b245ae8390f2ecdc0e5706241c28fc7b"></script>
+<script type="text/javascript">
+    var map, toolBar, mouseTool, contextMenu;
+    //初始化地图对象，加载地图
+    map = new AMap.Map("Map", {
+        resizeEnable: true
+    });
+
+    //设置城市
+    document.getElementById('query').onclick = function(){
+        var cityName = document.getElementById('cityName').value;
+        if(!cityName){
+            cityName = '北京市';
+        }
+        map.setCity(cityName);
+    };
+
+
+
+    //地图中添加地图操作ToolBar插件、鼠标工具MouseTool插件
+    map.plugin(["AMap.ToolBar","AMap.MouseTool"], function(){
+        toolBar = new AMap.ToolBar();
+        map.addControl(toolBar);
+        mouseTool = new AMap.MouseTool(map);
+    });
+
+    //自定义右键菜单内容
+    var menuContent = document.createElement("div");
+    menuContent.innerHTML = "<div class='Menu'>"+
+        "<ul>"+
+        "<li class='hover' onclick='zoomMenu(0)'>缩小</li>"+
+        "<li onclick='zoomMenu(1)'>放大</li>"+
+        "<li onclick='distanceMeasureMenu()'>测量距离</li>"+
+        "<li onclick='addMarkerMenu()'>添加标记</li>"
+        +"<ul>"
+        +"</div>"
+    //创建右键菜单
+    contextMenu = new AMap.ContextMenu({isCustom:true,content:menuContent});//通过content自定义右键菜单内容
+
+    //地图绑定鼠标右击事件——弹出右键菜单
+    AMap.event.addListener(map, 'rightclick', function(e){
+        contextMenu.open(map, e.lnglat);
+        contextMenuPositon = e.lnglat; //右键菜单位置
+    });
+    contextMenu.close();
+    //右键菜单缩放地图
+    function zoomMenu(tag){
+        if(tag === 0){	map.zoomOut();}
+        if(tag === 1){	map.zoomIn();}
+        contextMenu.close();
+    }
+
+    //右键菜单距离量测
+    function distanceMeasureMenu(){
+        mouseTool.rule();
+        contextMenu.close();
+    }
+
+    //右键菜单添加Marker标记
+    function addMarkerMenu(){
+        mouseTool.close();
+        var marker = new AMap.Marker({
+            map: map,
+            position: contextMenuPositon, //基点位置
+            icon: "http://webapi.amap.com/images/marker_sprite.png", //marker图标，直接传递地址url
+            offset: {x:-8,y:-34} //相对于基点的位置
+        });
+        contextMenu.close();
+    }
+</script>
+</body>
+</html>
+

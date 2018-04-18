@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<style>
+		body {
+			color: #ffffff;
+			font-family: Monospace;
+			font-size: 13px;
+			text-align: center;
+			font-weight: bold;
+			background-color: #050505;
+			margin: 0px;
+			overflow: hidden;
+		}
+		#info {
+			position: absolute;
+			top: 0px;
+			width: 100%;
+			padding: 5px;
+		}
+		a {
+			color: #ffffff;
+		}
+		#oldie a {
+			color: #da0
+		}
+		#stats{display: none;}
+	</style>
+</head>
+<body>
+<div id="container"></div>
+<script src="js/three.min.56.js"></script>
+<script src="js/Detector.js"></script>
+<script src="js/libs/stats.min.js"></script>
+<script id="fragment_shader4" type="x-shader/x-fragment">
+
+			uniform float time;
+			uniform vec2 resolution;
+
+			varying vec2 vUv;
+
+			void main( void ) {
+
+				vec2 position = -1.0 + 2.0 * vUv;
+
+				float red = abs( sin( position.x * position.y + time / 5.0 ) );
+				float green = abs( sin( position.x * position.y + time / 4.0 ) );
+				float blue = abs( sin( position.x * position.y + time / 3.0 ) );
+				gl_FragColor = vec4( red, green, blue, 1.0 );
+
+			}
+
+		</script>
+<script id="fragment_shader3" type="x-shader/x-fragment">
+
+			uniform float time;
+			uniform vec2 resolution;
+
+			varying vec2 vUv;
+
+			void main( void ) {
+
+				vec2 position = vUv;
+
+				float color = 0.0;
+				color += sin( position.x * cos( time / 15.0 ) * 80.0 ) + cos( position.y * cos( time / 15.0 ) * 10.0 );
+				color += sin( position.y * sin( time / 10.0 ) * 40.0 ) + cos( position.x * sin( time / 25.0 ) * 40.0 );
+				color += sin( position.x * sin( time / 5.0 ) * 10.0 ) + sin( position.y * sin( time / 35.0 ) * 80.0 );
+				color *= sin( time / 10.0 ) * 0.5;
+
+				gl_FragColor = vec4( vec3( color, color * 0.5, sin( color + time / 3.0 ) * 0.75 ), 1.0 );
+
+			}
+
+		</script>
+<script id="fragment_shader2" type="x-shader/x-fragment">
+
+			uniform float time;
+			uniform vec2 resolution;
+
+			uniform sampler2D texture;
+
+			varying vec2 vUv;
+
+			void main( void ) {
+
+				vec2 position = -1.0 + 2.0 * vUv;
+
+				float a = atan( position.y, position.x );
+				float r = sqrt( dot( position, position ) );
+
+				vec2 uv;
+				uv.x = cos( a ) / r;
+				uv.y = sin( a ) / r;
+				uv /= 10.0;
+				uv += time * 0.05;
+
+				vec3 color = texture2D( texture, uv ).rgb;
+
+				gl_FragColor = vec4( color * r * 1.5, 1.0 );
+
+			}
+		</script>
+<script id="fragment_shader1" type="x-shader/x-fragment">
+
+			uniform vec2 resolution;
+			uniform float time;
+
+			varying vec2 vUv;
+
+			void main(void)
+			{
+
+				vec2 p = -1.0 + 2.0 * vUv;
+				float a = time*40.0;
+				float d,e,f,g=1.0/40.0,h,i,r,q;
+
+				e=400.0*(p.x*0.5+0.5);
+				f=400.0*(p.y*0.5+0.5);
+				i=200.0+sin(e*g+a/150.0)*20.0;
+				d=200.0+cos(f*g/2.0)*18.0+cos(e*g)*7.0;
+				r=sqrt(pow(i-e,2.0)+pow(d-f,2.0));
+				q=f/r;
+				e=(r*cos(q))-a/2.0;f=(r*sin(q))-a/2.0;
+				d=sin(e*g)*176.0+sin(e*g)*164.0+r;
+				h=((f+d)+a/2.0)*g;
+				i=cos(h+r*p.x/1.3)*(e+e+a)+cos(q*g*6.0)*(r+h/3.0);
+				h=sin(f*g)*144.0-sin(e*g)*212.0*p.x;
+				h=(h+(f-e)*q+sin(r-(a+h)/7.0)*10.0+i/4.0)*g;
+				i+=cos(h*2.3*sin(a/350.0-q))*184.0*sin(q-(r*4.3+a/12.0)*g)+tan(r*g+h)*184.0*cos(r*g+h);
+				i=mod(i/5.6,256.0)/64.0;
+				if(i<0.0) i+=4.0;
+				if(i>=2.0) i=4.0-i;
+				d=r/350.0;
+				d+=sin(d*d*8.0)*0.52;
+				f=(sin(a*g)+1.0)/2.0;
+				gl_FragColor=vec4(vec3(f*i/1.6,i/2.0+d/13.0,i)*d*p.x+vec3(i/1.3+d/8.0,i/2.0+d/18.0,i)*d*(1.0-p.x),1.0);
+
+			}
+
+		</script>
+<script id="vertexShader" type="x-shader/x-vertex">
+
+			varying vec2 vUv;
+
+			void main()
+			{
+				vUv = uv;
+				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+				gl_Position = projectionMatrix * mvPosition;
+			}
+
+		</script>
+<script >
+
+    var defineArr = ["webgl", "addGetWebGLMessage", "innerWidth", "innerHeight", "container", "getElementById", "z", "position", "now", "f", "v2", "t", "textures/disturb.jpg", "loadTexture", "ImageUtils", "wrapS", "value", "texture", "wrapT", "RepeatWrapping", "fragment_shader1", "fragment_shader2", "fragment_shader3", "fragment_shader4", "length", "textContent", "vertexShader", "x", "y", "add", "domElement", "appendChild", "style", "absolute", "top", "0px", "resize", "addEventListener", "resolution", "aspect", "updateProjectionMatrix", "setSize", "update", "getDelta", "time", "elapsedTime", "rotation", "render"];
+    if (!Detector[defineArr[0]]) {
+        Detector[defineArr[1]]();
+    };
+    var container, stats;
+    var start_time;
+    var camera, scene, renderer;
+    var uniforms1, uniforms2, material1, material2, mesh, meshes = [];
+    var mouseX = 0,
+        mouseY = 0,
+        lat = 0,
+        lon = 0,
+        phy = 0,
+        theta = 0;
+    var windowHalfX = window[defineArr[2]] / 2;
+    var windowHalfY = window[defineArr[3]] / 2;
+    var clock = new THREE.Clock();
+    init();
+    animate();
+
+    function init() {
+        container = document[defineArr[5]](defineArr[4]);
+        camera = new THREE.PerspectiveCamera(40, windowHalfX / windowHalfY, 1, 3000);
+        camera[defineArr[7]][defineArr[6]] = 4;
+        scene = new THREE.Scene();
+        start_time = Date[defineArr[8]]();
+        uniforms1 = {
+            time: {
+                type: defineArr[9],
+                value: 1.0
+            },
+            resolution: {
+                type: defineArr[10],
+                value: new THREE.Vector2()
+            }
+        };
+        uniforms2 = {
+            time: {
+                type: defineArr[9],
+                value: 1.0
+            },
+            resolution: {
+                type: defineArr[10],
+                value: new THREE.Vector2()
+            },
+            texture: {
+                type: defineArr[11],
+                value: THREE[defineArr[14]][defineArr[13]](defineArr[12])
+            }
+        };
+        uniforms2[defineArr[17]][defineArr[16]][defineArr[15]] = uniforms2[defineArr[17]][defineArr[16]][defineArr[18]] = THREE[defineArr[19]];
+        var t = 0.75,
+            param = [],
+            defor = [
+                [defineArr[20], uniforms1],
+                [defineArr[21], uniforms2],
+                [defineArr[22], uniforms1],
+                [defineArr[23], uniforms1]
+            ];
+        for (var i = 0; i < defor[defineArr[24]]; i++) {
+            material = new THREE.ShaderMaterial({
+                uniforms: defor[i][1],
+                vertexShader: document[defineArr[5]](defineArr[26])[defineArr[25]],
+                fragmentShader: document[defineArr[5]](defor[i][0])[defineArr[25]]
+            });
+            param[i] = material;
+            mesh = new THREE.Mesh(new THREE.CubeGeometry(t, t, t), new THREE.MeshFaceMaterial([param[i], param[i], param[i], param[i], param[i], param[i]]));
+            mesh[defineArr[7]][defineArr[27]] = i - (defor[defineArr[24]] - 1) / 2;
+            mesh[defineArr[7]][defineArr[28]] = i % 2 - 0.5;
+            scene[defineArr[29]](mesh);
+            meshes[i] = mesh;
+        };
+        renderer = new THREE.WebGLRenderer();
+        container[defineArr[31]](renderer[defineArr[30]]);
+        stats = new Stats();
+        stats[defineArr[30]][defineArr[32]][defineArr[7]] = defineArr[33];
+        stats[defineArr[30]][defineArr[32]][defineArr[34]] = defineArr[35];
+        container[defineArr[31]](stats[defineArr[30]]);
+        onWindowResize();
+        window[defineArr[37]](defineArr[36], onWindowResize, false);
+    };
+
+    function onWindowResize(r) {
+        uniforms1[defineArr[38]][defineArr[16]][defineArr[27]] = window[defineArr[2]];
+        uniforms1[defineArr[38]][defineArr[16]][defineArr[28]] = window[defineArr[3]];
+        uniforms2[defineArr[38]][defineArr[16]][defineArr[27]] = window[defineArr[2]];
+        uniforms2[defineArr[38]][defineArr[16]][defineArr[28]] = window[defineArr[3]];
+        camera[defineArr[39]] = window[defineArr[2]] / window[defineArr[3]];
+        camera[defineArr[40]]();
+        renderer[defineArr[41]](window[defineArr[2]], window[defineArr[3]]);
+    };
+
+    function animate() {
+        requestAnimationFrame(animate);
+        render();
+        stats[defineArr[42]]();
+    };
+
+    function render() {
+        var t = clock[defineArr[43]]();
+        uniforms1[defineArr[44]][defineArr[16]] += t * 5;
+        uniforms2[defineArr[44]][defineArr[16]] = clock[defineArr[45]];
+        for (var i = 0; i < meshes[defineArr[24]]; ++i) {
+            meshes[i][defineArr[46]][defineArr[28]] += t * 0.5 * (i % 2 ? 1 : -1);
+            meshes[i][defineArr[46]][defineArr[27]] += t * 0.5 * (i % 2 ? -1 : 1);
+        };
+        renderer[defineArr[47]](scene, camera);
+    };
+
+</script>
+</body>
+</html>
